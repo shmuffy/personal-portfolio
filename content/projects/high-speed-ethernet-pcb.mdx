@@ -1,0 +1,50 @@
+---
+title: High-Speed Ethernet PCB — Pad System DAQ
+date: "2025-06-01"
+excerpt: 100BASE-TX Ethernet board for the Highlander Space Program pad system — DP83848 PHY, magnetics-integrated RJ45, impedance-controlled differential pairs, and STM32F7 MAC integration.
+tags:
+  - Altium
+  - Ethernet
+  - STM32F7
+  - High-Speed PCB
+  - DAQ
+category: pcb
+featured: false
+coverImage: /images/projects/high-speed-ethernet-pcb.jpg
+specs:
+  Standard: "100BASE-TX (IEEE 802.3)"
+  PHY: "DP83848"
+  MCU: "STM32F7 (MAC integration)"
+  Impedance: "100 Ω differential pairs"
+  ESD: "TVS on RJ45 lines"
+  Connector: "Magnetics-integrated RJ45"
+links:
+  github: https://github.com/shmuffy
+---
+
+## Overview
+
+A 100BASE-TX Ethernet interface board designed for the Highlander Space Program's launch pad data acquisition (DAQ) network. The board links pad-side instrumentation to the ground station via standard Ethernet, providing deterministic, high-bandwidth telemetry without the range or bandwidth limitations of serial wireless links.
+
+## PHY Selection and Interface
+
+The **DP83848** is a single-port 10/100 Ethernet PHY with an MII interface to the STM32F7's integrated Ethernet MAC. The PHY handles the 100BASE-TX analog front-end: twisted-pair encoding/decoding, link detection, and autonegotiation.
+
+The STM32F7 RMII (Reduced MII) interface reduces the pin count between MAC and PHY to 7 lines vs. 18 for full MII, simplifying routing while maintaining 100 Mbps throughput.
+
+## Signal Integrity
+
+100BASE-TX imposes hard constraints on differential pair routing:
+- **100 Ω differential impedance** on TX and RX pairs — achieved with controlled-impedance stackup and width/spacing verified against the fab's process capabilities
+- **Matched pair length** within 5 mil across the PHY-to-magnetics segment
+- **Shielded routing** — the differential pairs are routed as a reference-plane-referenced stripline segment wherever possible, with no splits in the reference plane beneath the traces
+
+## Magnetics and ESD
+
+A magnetics-integrated RJ45 connector includes the isolation transformer and common-mode choke inline. This eliminates discrete component count and ensures the magnetics are as close to the connector as physically possible, minimizing unshielded PCB trace length on the line side.
+
+TVS diodes on all four Ethernet pairs (before the magnetics) provide ESD protection to IEC 61000-4-2 Level 4 — appropriate for a pad environment with static discharge risk from personnel and equipment.
+
+## STM32F7 MAC Integration
+
+Clock distribution from the PHY's 50 MHz reference clock output to the STM32F7 REFCLK input is routed with controlled length and terminated to minimize reflections. The RMII data and clock lines are length-matched relative to each other to maintain setup/hold margin at 50 MHz clocking.

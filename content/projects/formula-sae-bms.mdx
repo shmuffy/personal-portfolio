@@ -1,0 +1,50 @@
+---
+title: Formula SAE 400V Battery Management System
+date: "2024-08-01"
+excerpt: High-voltage BMS PCB for a Formula SAE Electric 400V traction pack — STM32 host with BQ76PLQ1 stacked cell monitor, CAN bus, and galvanic isolation.
+tags:
+  - STM32
+  - High Voltage
+  - BMS
+  - CAN Bus
+  - Formula SAE
+category: pcb
+featured: true
+coverImage: /images/projects/formula-sae-bms.jpg
+specs:
+  Pack Voltage: "400 V nominal"
+  Cell Monitor: "BQ76PLQ1 (stacked)"
+  MCU: "STM32"
+  Isolation: "Galvanic"
+  Interface: "CAN bus"
+  Standard: "IPC-2221B / FSAE"
+links:
+  github: https://github.com/shmuffy
+---
+
+## Overview
+
+Battery Management System PCB designed for Highlander Racing's Formula SAE Electric vehicle, managing a 400 V traction pack under race conditions. The board serves as the electrical safety backbone of the car — monitoring cell health, enforcing protection thresholds, and communicating pack state to the Vehicle Control Unit over CAN.
+
+## Architecture
+
+The STM32 host processor runs the BMS application logic: polling cell voltages and temperatures, enforcing state-of-charge limits, and commanding contactors. Communication to the high-voltage domain crosses a galvanic isolation barrier, separating the low-voltage control circuitry from the traction pack potential.
+
+The **BQ76PLQ1** stacked cell monitor interfaces to the cell stack via a daisy-chain topology, enabling measurement of individual cell voltages across the full pack without requiring high-common-mode ADC inputs on the host side.
+
+DC-DC power stages provide isolated supplies for both sides of the isolation barrier, ensuring the MCU rails and cell monitor rails are independently regulated and fault-tolerant.
+
+## CAN Integration
+
+The BMS communicates with the VCU and inverter over CAN bus, broadcasting pack voltage, current, state-of-charge, fault status, and thermal data at configurable intervals. The CAN node implements the FSAE-required safety messaging protocol, including heartbeat monitoring and fault escalation.
+
+## Validation
+
+Electrical validation covered:
+- Isolation integrity across the galvanic barrier under DC and AC stimulus
+- Contactor coil characterization (inrush, drop-out, coil resistance at temperature)
+- CAN signal integrity at 1 Mbit/s under inverter-induced EMI conditions
+- Current sensor accuracy (zero offset, gain error, thermal drift)
+- Thermal performance under sustained transient race-load current profiles
+
+PCB layouts revised to meet IPC-2221B creepage/clearance requirements at 400 V, with Gerbers released for manufacturing.

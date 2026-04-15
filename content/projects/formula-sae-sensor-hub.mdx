@@ -1,0 +1,50 @@
+---
+title: Formula SAE Front Sensor Hub
+date: "2024-04-01"
+excerpt: STM32F405-based vehicle telemetry node integrating throttle, brake, steering, and shock position sensors with dual-CAN output and sealed automotive connectors.
+tags:
+  - STM32
+  - CAN Bus
+  - PCB Design
+  - Automotive
+  - Signal Conditioning
+category: embedded
+featured: false
+coverImage: /images/projects/formula-sae-sensor-hub.jpg
+specs:
+  MCU: "STM32F405"
+  CAN: "Dual-port, 60Ω split termination"
+  Filters: "RC band-tuned, 6–515 Hz"
+  Connectors: "Deutsch / Ampseal (sealed)"
+  Power: "3.3 V regulated"
+  Standard: "IPC-2221B / FSAE"
+links:
+  github: https://github.com/shmuffy
+---
+
+## Overview
+
+Front sensor hub for the Highlander Racing Formula SAE Electric vehicle. The board aggregates all front-end vehicle dynamics sensors into a single CAN node, reducing harness complexity and providing clean, filtered telemetry data to the Vehicle Control Unit at race-event reliability levels.
+
+## Sensor Integration
+
+The hub interfaces to:
+- **Throttle position potentiometer** (redundant dual-channel, APPS plausibility check per FSAE rules)
+- **Brake pressure sensor** (front circuit)
+- **Steering angle potentiometer**
+- **Shock potentiometers** (front left / front right suspension travel)
+- **Thermistors** (brake caliper thermal monitoring)
+
+Each analog input passes through a band-tuned RC filter. Filter cutoff frequencies range from **6 Hz** (suspension sensors — reject vibration above sprung frequency) to **515 Hz** (brake pressure — preserve transient response through braking events). Filter design was validated against measured chassis vibration spectra to avoid aliasing.
+
+## Signal Chain
+
+The STM32F405 internal ADC samples all sensor channels at 12-bit resolution. Firmware applies offset calibration, gain correction, and rate-of-change monitoring per channel. The APPS (accelerator pedal position sensor) channel implements the FSAE-required implausibility detection with a 100 ms timeout and throttle cut on fault.
+
+## CAN Architecture
+
+Dual CAN transceivers provide node redundancy. Each transceiver uses 60 Ω split termination — two 120 Ω resistors in series with a bypass capacitor to ground at the midpoint — improving common-mode noise rejection on the vehicle harness. EMI and ESD protection is placed at the board edge before the transceiver inputs.
+
+## Mechanical Integration
+
+All connectors are sealed Deutsch DT or Ampseal series, rated for the vibration and moisture environment of an open-wheel race car. Connector placement was coordinated with the harness routing to minimize harness length and avoid routing signal cables near high-current inverter cables.

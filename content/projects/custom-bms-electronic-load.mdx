@@ -1,0 +1,64 @@
+---
+title: Custom BMS & 300W Programmable Electronic Load
+date: "2025-10-01"
+excerpt: Senior design project — a 300W MOSFET-based programmable electronic load and a 10-cell Li-ion BMS with hardware protection and regulated power delivery, both designed in Altium.
+tags:
+  - Altium
+  - Power Electronics
+  - BMS
+  - STM32
+  - Analog Design
+category: hardware
+featured: true
+coverImage: /images/projects/custom-bms-electronic-load.jpg
+specs:
+  Load Power: "300 W"
+  Load Range: "0–20 A"
+  Load MOSFET: "IRFP250N (multiple stages)"
+  BMS Cells: "10S (36–42 V)"
+  BMS IC: "BQ76930"
+  OC/SC Protection: "50–60 A"
+  Balancing: "Passive"
+  Thermal Cutoff: "~65 °C (NTC)"
+links:
+  github: https://github.com/shmuffy
+---
+
+## Overview
+
+Senior design project comprising two interdependent hardware systems: a 300 W programmable electronic load for characterizing battery packs under controlled discharge conditions, and a 10-cell Li-ion BMS providing hardware-enforced protection for the pack under test.
+
+## Programmable Electronic Load
+
+### Power Stage
+
+Multiple IRFP250N MOSFETs are configured as linear pass elements in parallel, each sourced by a precision shunt resistor for current sharing and Kelvin-sensed current measurement. Linear operation (vs. switching) eliminates ripple current injection into the battery under test, which would contaminate impedance measurements.
+
+### Control Loop
+
+A **TL431**-stabilized analog feedback loop regulates drain current against a DAC-set reference. The STM32F3 generates the current setpoint via DAC and monitors the sensed shunt voltage via ADC, implementing a digital outer loop on top of the analog inner loop. This two-tier architecture gives fast transient response (analog inner loop bandwidth ~10 kHz) with programmable precision (12-bit DAC, ~5 mA resolution at 20 A full scale).
+
+### Thermal Management
+
+Thermal derating is implemented in firmware: as heatsink temperature rises (measured by NTC on the MOSFET mounting surface), the firmware reduces the maximum allowable current setpoint proportionally. Fan PWM speed is controlled by a second STM32 timer channel, scaled to heatsink temperature.
+
+An iso-trigger input allows external instruments (oscilloscope, data logger) to synchronously trigger load step events without ground loop interference.
+
+## 10-Cell Li-ion BMS
+
+### Protection Architecture
+
+The **BQ76930** cell monitor IC handles cell voltage measurement across all 10 cells and enforces hardware overcurrent and short-circuit protection via the MOSFET gate drivers built into the IC. External 55 V rated high-side MOSFET breakers implement the charge and discharge isolation paths.
+
+Protection thresholds:
+- **OC (sustained):** 50 A
+- **SC (transient):** 60 A with ~100 µs response
+- **NTC thermal cutoff:** ~65 °C (passive thermistor latch)
+
+A 20 mΩ / 7 W precision shunt in the main current path provides Kelvin-sensed current measurement for the cell monitor's coulomb counting.
+
+### Power Tree
+
+A regulated **12 V → 3.3 V** converter provides the BMS digital rail. The 12 V intermediate rail is derived from the pack with a buck converter, allowing BMS self-power from the pack being protected. This eliminates external power requirements during standalone operation.
+
+Passive cell balancing bleeds excess energy from high-SOC cells through switched resistors, maintaining cell-to-cell voltage spread below 20 mV at end-of-charge.

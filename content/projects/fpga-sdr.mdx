@@ -1,0 +1,53 @@
+---
+title: FPGA-Based Software Defined Radio
+date: "2025-05-15"
+excerpt: HackRF-style SDR in Altium — AD9364 RF transceiver, custom multi-rail power tree, clock fanout, and high-speed differential routing into an Artix-7 FPGA mezzanine interface.
+tags:
+  - Altium
+  - FPGA
+  - RF
+  - AD9364
+  - SDR
+  - Artix-7
+category: hardware
+featured: true
+coverImage: /images/projects/fpga-sdr.jpg
+specs:
+  RF IC: "AD9364 (Analog Devices)"
+  FPGA: "Artix-7 mezzanine"
+  Power Rails: "+1.0V / 1.8V / 1.35V / 3.3V"
+  Interface: "High-speed LVDS differential"
+  Reference: "Python IQ model (NCO, LPF, decimation)"
+  Status: "Schematic complete, layout underway"
+links:
+  github: https://github.com/shmuffy
+---
+
+## Overview
+
+A HackRF-inspired software-defined radio platform designed from scratch in Altium Designer. The goal is a full-featured RF transceiver board that can interface to an Artix-7 FPGA mezzanine for real-time DSP — covering everything from signal capture and down-conversion to custom demodulation chains. Schematic capture is complete; PCB layout is underway.
+
+## RF Front-End
+
+The **AD9364** (Analog Devices) is a 1×1 RF transceiver covering 70 MHz to 6 GHz, integrating the complete RF signal chain: LNA, mixer, synthesizer, filters, and 12-bit ADC/DAC. The transceiver outputs baseband IQ data over a high-speed parallel digital interface.
+
+Power supply design for the AD9364 is non-trivial — the IC requires four separate rails (+1.0 V, +1.8 V, +1.35 V, +3.3 V) with sequencing constraints and tight noise specifications on the analog supplies. Separate LDO regulators with LC input filtering are used for each rail, with power sequencing enforced by a supervisor IC.
+
+## Clock Architecture
+
+A low-phase-noise reference oscillator feeds the AD9364 REF_CLK input and distributes a fanout copy to the FPGA mezzanine. Matched-length clock routing and controlled impedance ensure timing margins across the interface.
+
+## FPGA Interface
+
+High-speed differential LVDS pairs carry the IQ data stream between the AD9364 and the Artix-7 mezzanine connector. The differential pairs are length-matched within 5 mil across the interface, with series termination resistors placed within 200 mil of the source to control reflections at Gbps-class data rates.
+
+## DSP Reference Model
+
+Before the hardware was routed, a Python-based DSP reference model was implemented to validate the signal chain:
+
+- **IQ capture** from the AD9364 data interface (simulated)
+- **Digital down-conversion** via NCO (numerically controlled oscillator) mixing — shifts the signal of interest to baseband
+- **Low-pass filter** to reject adjacent channels
+- **Decimation** to reduce sample rate and computational load
+
+The reference model establishes the required filter specifications, FPGA resource budget, and expected SNR before committing to layout — allowing the hardware design and firmware design to proceed in parallel.

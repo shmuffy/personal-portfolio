@@ -1,0 +1,36 @@
+---
+title: On Ground Planes and Return Currents
+date: "2024-08-20"
+excerpt: Why your ground plane isn't just a reference — it's a conductor, and how return currents shape every signal on your board.
+tags:
+  - PCB Design
+  - Signal Integrity
+  - EMC
+published: true
+---
+
+## The Myth of the Infinite Ground
+
+Every beginner learns that ground is ground — a zero-voltage reference, a place to sink current, an afterthought. It's the net you pour copper into and stop thinking about.
+
+That mental model will fail you the moment your board has more than one switching node.
+
+## Return Currents Follow the Path of Least Impedance
+
+At DC, that path is the path of least resistance. At frequency — and your digital signals are always at frequency — that path is the path of least inductance, which means it follows directly beneath the signal trace.
+
+This is the core insight: a current flowing through a trace on layer 1 creates a return current in the ground plane on layer 2 that mirrors the signal's path as closely as the geometry allows.
+
+## What Happens When You Break the Plane
+
+A slot, a cutout, an anti-pad — anything that interrupts the return path forces the current to route around the obstacle. The loop area expands. Loop area is a loop antenna. You've just built a radiator into your board.
+
+This is why you never route signals across a plane split, even if the signal net has no electrical connection to the split. The return current doesn't know about nets. It knows about impedance.
+
+## Practical Implications
+
+Keep your ground plane solid under every high-frequency trace. When you must split planes for analog/digital isolation, route the crossing signals over the bridge point — the only place where the return path is continuous across the split.
+
+Place decoupling capacitors at every power pin, and make sure their via return path is short. A cap ten millimeters from its power pin via is not a decoupling capacitor — it's a stub.
+
+The board is a circuit. The planes are conductors. Design them accordingly.
