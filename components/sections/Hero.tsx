@@ -6,11 +6,6 @@ import { AphexField } from "@/components/ui/AphexField";
 export function Hero() {
   return (
     <section className="relative min-h-[calc(100svh-3rem)] flex flex-col justify-center overflow-hidden">
-      {/* Decorative coordinate — top left */}
-      <div className="absolute top-6 left-6 md:left-12">
-        <SpecLabel label="CK_001" variant="slash" className="text-ghost" />
-      </div>
-
       {/* Main content */}
       <div className="relative z-10 px-6 md:px-12 max-w-7xl mx-auto w-full">
         <AphexField />

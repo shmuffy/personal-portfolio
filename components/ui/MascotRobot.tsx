@@ -3,10 +3,10 @@
 import { useEffect, useRef } from 'react';
 
 const FPS = 30;
-const SOURCE_WIDTH = 311;
-const SOURCE_HEIGHT = 239;
-const DISPLAY_WIDTH = 330;
-const DISPLAY_HEIGHT = 254;
+const SOURCE_WIDTH = 221;
+const SOURCE_HEIGHT = 154;
+const DISPLAY_WIDTH = 234;
+const DISPLAY_HEIGHT = 163;
 
 export function MascotRobot() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -74,7 +74,7 @@ export function MascotRobot() {
   return (
     <div
       aria-hidden="true"
-      className="fixed bottom-6 right-6 pointer-events-none select-none"
+      className="absolute top-56 right-12 md:right-20 pointer-events-none select-none"
       style={{ zIndex: 20 }}
     >
       <canvas
@@ -86,6 +86,7 @@ export function MascotRobot() {
           width: `${DISPLAY_WIDTH}px`,
           height: `${DISPLAY_HEIGHT}px`,
           imageRendering: 'pixelated',
+          filter: 'grayscale(1) contrast(1.05) brightness(0.92)',
         }}
       />
     </div>

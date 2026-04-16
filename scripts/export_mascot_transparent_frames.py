@@ -20,21 +20,25 @@ FPS = 30
 
 # Crop area in full-frame coordinates (2880x1698 recording).
 # Tuned to include full crab + laptop typing motion while excluding lower textbox body.
-CROP_LEFT = 2450
-CROP_TOP = 1300
-CROP_RIGHT = 2760
+CROP_LEFT = 2520
+CROP_TOP = 1385
+CROP_RIGHT = 2740
 CROP_BOTTOM = 1538
 
 # Background keying thresholds.
 HARD_BG_MAX = 20
 SOFT_BG_MAX = 40
+BOTTOM_UI_CLEANUP_ROWS = 40
 
 
-def is_crab_pixel(r: int, g: int, b: int) -> bool:
+def is_mascot_pixel(r: int, g: int, b: int) -> bool:
     if r == 0 and g == 0 and b == 0:
         return True
-    # Main terracotta + shadow/laptop stroke colors used in the sprite.
+    # Main terracotta + shadow colors used in the mascot.
     if r > 120 and 55 < g < 170 and 40 < b < 145 and r > g and r > b:
+        return True
+    # Laptop and typing accessory strokes are neutral greys.
+    if 65 <= r <= 190 and abs(r - g) <= 22 and abs(g - b) <= 22:
         return True
     return False
 
@@ -44,8 +48,11 @@ def alpha_for_pixel(r: int, g: int, b: int, y: int, out_h: int) -> int:
     m = max(r, g, b)
     if m <= HARD_BG_MAX:
         return 0
+    # Kill the thin bottom UI separator line (neutral gray band near the floor).
+    if y >= out_h - 10 and 60 <= r <= 210 and abs(r - g) <= 25 and abs(g - b) <= 25:
+        return 0
     # Remove residual bottom overlay text/line while preserving mascot pixels.
-    if y >= out_h - 24 and not is_crab_pixel(r, g, b):
+    if y >= out_h - BOTTOM_UI_CLEANUP_ROWS and not is_mascot_pixel(r, g, b):
         return 0
     if m >= SOFT_BG_MAX:
         return 255
