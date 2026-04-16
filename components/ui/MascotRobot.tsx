@@ -89,7 +89,7 @@ export function MascotRobot() {
   return (
     <div
       aria-hidden="true"
-      className="absolute top-56 right-12 md:right-20 pointer-events-none select-none"
+      className="absolute top-80 right-16 md:right-20 pointer-events-none select-none"
       style={{ zIndex: 20 }}
     >
       <canvas

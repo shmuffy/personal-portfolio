@@ -33,12 +33,6 @@ export function Hero() {
         <CoffeeChatButton />
       </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2">
-        <span className="scroll-indicator font-body text-sm text-fog select-none">
-          ↓
-        </span>
-      </div>
     </section>
   );
 }
