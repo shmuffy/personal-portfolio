@@ -49,13 +49,28 @@ export function MascotRobot() {
         if (cancelled) return;
         const frameMs = 1000 / fps;
         const startedAt = performance.now();
+        const safeFrameCount =
+          Number.isFinite(frameCount) && frameCount > 0
+            ? frameCount
+            : frames.length;
         let raf = 0;
 
         const tick = (now: number) => {
           if (cancelled) return;
-          const frameIdx = Math.floor((now - startedAt) / frameMs) % frameCount;
+          const frameIdx =
+            safeFrameCount > 0
+              ? Math.floor((now - startedAt) / frameMs) % safeFrameCount
+              : -1;
+          if (!Number.isFinite(frameIdx) || safeFrameCount <= 0) {
+            return;
+          }
+          const frame = frames[frameIdx];
+          if (!frame || !frame.complete || frame.naturalWidth === 0) {
+            raf = requestAnimationFrame(tick);
+            return;
+          }
           ctx.clearRect(0, 0, SOURCE_WIDTH, SOURCE_HEIGHT);
-          ctx.drawImage(frames[frameIdx]!, 0, 0, SOURCE_WIDTH, SOURCE_HEIGHT);
+          ctx.drawImage(frame, 0, 0, SOURCE_WIDTH, SOURCE_HEIGHT);
           raf = requestAnimationFrame(tick);
         };
 

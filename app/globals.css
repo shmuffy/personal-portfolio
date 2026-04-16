@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "PerfectDOSVGA437";
+  src: url("/fonts/PerfectDOSVGA437.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ─────────────────────────────────────────
    DESIGN TOKENS — STATIC COLORS
 ──────────────────────────────────────────── */
@@ -33,8 +41,8 @@
    FONT TOKENS — reference CSS vars from next/font
 ──────────────────────────────────────────── */
 @theme inline {
-  --font-display: var(--font-geist-mono), "Space Mono", monospace;
-  --font-body: var(--font-ibm-plex-mono), "Courier New", monospace;
+  --font-display: "PerfectDOSVGA437", monospace;
+  --font-body: "PerfectDOSVGA437", monospace;
 }
 
 /* ─────────────────────────────────────────
@@ -54,9 +62,17 @@ body {
   background-color: #050505;
   color: #999999;
   min-height: 100%;
-  font-family: var(--font-body);
+  font-family: "PerfectDOSVGA437", monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.font-body {
+  font-family: "PerfectDOSVGA437", monospace !important;
+}
+
+.font-display {
+  font-family: "PerfectDOSVGA437", monospace !important;
 }
 
 /* Remove default margin/padding from block elements */

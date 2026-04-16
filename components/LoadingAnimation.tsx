@@ -164,10 +164,18 @@ export function LoadingAnimation() {
     );
 
     // Start curtain slide
-    timers.push(setTimeout(() => setCurtain(true), CURTAIN_AT));
+    timers.push(
+      setTimeout(() => {
+        setCurtain(true);
+      }, CURTAIN_AT),
+    );
 
     // Remove overlay after curtain completes
-    timers.push(setTimeout(() => setDone(true), CURTAIN_AT + CURTAIN_DUR + 100));
+    timers.push(
+      setTimeout(() => {
+        setDone(true);
+      }, CURTAIN_AT + CURTAIN_DUR + 100),
+    );
 
     return () => timers.forEach(clearTimeout);
   }, []);
