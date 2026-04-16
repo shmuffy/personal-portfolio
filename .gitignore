@@ -24,6 +24,9 @@
 .DS_Store
 *.pem
 
+# local ffmpeg frame dumps (see scripts/export_mascot_ts.py)
+/.claude-slop-frames/
+
 # debug
 npm-debug.log*
 yarn-debug.log*

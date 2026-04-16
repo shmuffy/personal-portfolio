@@ -38,15 +38,6 @@ export function Hero() {
         <CoffeeChatButton />
       </div>
 
-      {/* Decorative coordinate — bottom right */}
-      <div className="absolute bottom-10 right-6 md:right-12">
-        <SpecLabel
-          label="33.7701° N  118.1937° W"
-          variant="plain"
-          className="text-ghost"
-        />
-      </div>
-
       {/* Scroll indicator */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2">
         <span className="scroll-indicator font-body text-sm text-fog select-none">
