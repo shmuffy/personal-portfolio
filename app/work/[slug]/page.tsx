@@ -8,6 +8,8 @@ import { getAllProjects, getProjectBySlug } from "@/lib/projects";
 import { SpecLabel } from "@/components/ui/SpecLabel";
 import { CircuitDivider } from "@/components/ui/CircuitDivider";
 import { Tag } from "@/components/ui/Tag";
+import { ExplodedModelViewer } from "@/components/ui/ExplodedModelViewer";
+import { StudioModelViewer } from "@/components/ui/StudioModelViewer";
 import Link from "next/link";
 
 export const dynamicParams = false;
@@ -72,6 +74,26 @@ export default async function ProjectPage({ params }: PageProps) {
           ))}
         </div>
       </div>
+
+      {slug === "custom-bms-electronic-load" && (
+        <div className="relative mb-10 w-full aspect-video min-h-[280px] border border-border bg-void overflow-hidden">
+          <ExplodedModelViewer
+            className="absolute inset-0 h-full min-h-0 w-full"
+            src="/models/E-Load.glb"
+            alt="Electronic Load — exploded PCB view"
+            focusNodeName="PCB"
+          />
+        </div>
+      )}
+      {slug === "cubesat-battery-card" && (
+        <div className="relative isolate z-[60] mb-10 w-full aspect-[4/3] min-h-[340px] overflow-hidden rounded-2xl border border-[#d6d3d1] bg-gradient-to-b from-[#f5f5f4] to-[#e7e5e4]">
+          <StudioModelViewer
+            className="absolute inset-0 h-full w-full"
+            src="/models/Ejection_Module.glb"
+            alt="CubeSat Battery Card 3D render"
+          />
+        </div>
+      )}
 
       <CircuitDivider className="mb-8" />
 

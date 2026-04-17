@@ -219,6 +219,12 @@ h1, h2, h3, h4, h5, h6, p, ul, ol, blockquote {
   filter: grayscale(60%) contrast(0.85);
 }
 
+/* 3D model previews — full color (no grayscale on WebGL canvas) */
+.project-card-3d,
+.group:hover .project-card-3d {
+  filter: none;
+}
+
 /* ─────────────────────────────────────────
    MDX PROSE
 ──────────────────────────────────────────── */
